@@ -54,8 +54,13 @@ app.use(webpackMiddleware(webpack({
 const router = new Router({ prefix: '' })
 
 router.get('/(.*)', ctx=>{
-  ctx.type = 'html';
-  ctx.body = createReadStream(`${ __dirname }/public/index.html`)
+  if(ctx.originalUrl.indexOf('/api')>-1){
+    ctx.body = { test: 'work' }
+  }else{
+    ctx.type = 'html';
+    ctx.body = createReadStream(`${ __dirname }/public/index.html`)
+  }
 })
+
 
 app.use(router.routes()).use(router.allowedMethods())
