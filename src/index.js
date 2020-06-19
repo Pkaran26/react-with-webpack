@@ -7,6 +7,7 @@ import { createReadStream } from 'fs'
 import serve from 'koa-static'
 import webpack from 'webpack'
 import webpackMiddleware from "koa-webpack-dev-middleware"
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 
 const app = new koa()
 const server = http.createServer(app.callback())
@@ -20,20 +21,26 @@ app.use(serve(__dirname + '/public'));
 app.use(webpackMiddleware(webpack({
   devServer: {
     contentBase: __dirname+"./src/front",
+    publicPath: '/',
     historyApiFallback: true
   },
-    entry: __dirname+"/front/index.js",
-    mode: 'development', //production
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          use: "babel-loader"
-        },
-        //{ test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader'] },
-      ]
-    },
-    output: {
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: __dirname+'/public/index.html'
+    })
+  ],
+  entry: __dirname+"/front/index.js",
+  mode: 'development', //production
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: "babel-loader"
+      },
+      { test: /\.css$/, use: [ 'style-loader', 'css-loader' ]}
+    ]
+  },
+  output: {
       path:  __dirname+"/public",
       publicPath: "http://localhost:8181/",
       filename: "bundle.js"
@@ -46,7 +53,7 @@ app.use(webpackMiddleware(webpack({
 
 const router = new Router({ prefix: '' })
 
-router.get('/', ctx=>{
+router.get('/(.*)', ctx=>{
   ctx.type = 'html';
   ctx.body = createReadStream(`${ __dirname }/public/index.html`)
 })
