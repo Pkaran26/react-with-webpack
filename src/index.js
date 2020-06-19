@@ -34,7 +34,11 @@ app.use(webpackMiddleware(webpack({
       publicPath: "http://localhost:8181/",
       filename: "bundle.js"
     }
-})));
+}), {
+  stats: {
+        colors: true
+    }
+}));
 
 const router = new Router({ prefix: '' })
 
