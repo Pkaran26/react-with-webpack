@@ -18,6 +18,10 @@ app.use(cors())
 app.use(serve(__dirname + '/public'));
 
 app.use(webpackMiddleware(webpack({
+  devServer: {
+    contentBase: __dirname+"./src/front",
+    historyApiFallback: true
+  },
     entry: __dirname+"/front/index.js",
     mode: 'development', //production
     module: {
