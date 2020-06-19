@@ -19,7 +19,7 @@ app.use(serve(__dirname + '/public'));
 
 app.use(webpackMiddleware(webpack({
     entry: __dirname+"/front/index.js",
-    mode: 'development',
+    mode: 'development', //production
     module: {
       rules: [
         {
